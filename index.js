@@ -37,6 +37,14 @@ const sendEmail = async () => {
 
     //Enviando a senha
     await page.click('input[type="submit"]');
+
+    //"Continuar conectado" Marcando checkbox "Não mostrar isso novamente"
+    await page.waitForSelector('input[id="KmsiCheckboxField');
+    await page.click('input[id="KmsiCheckboxField"]')
+
+    // Clicando no botão "Sim"
+    await page.click('input[id="KmsiCheckboxField"]')
+    await page.click('input[type="submit"]')
 }
 
 sendEmail()
