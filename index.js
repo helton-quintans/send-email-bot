@@ -5,20 +5,20 @@ const senha = 'Zeppelin006'
 const message = {
     recipient: 'yanak.sushi@outlook.com',
     subject: 'Email automático',
-    body: 'Teste'
+    body: 'Teste - Isso é uma mensagem que eu não precisei digitar'
 }
 
 const sendEmail = async () => {
     // configurar navegador
     const browser = await puppeteer.launch({
         headless: false,
-        slowMo: 100,
+        slowMo: 10,
         defaultViewport: {
             width: 1366,
             height: 768,
         },
         args: ['--start-maximized']
-            
+
     });
     // cria a página e acessa a url
     const page = await browser.newPage();
@@ -55,6 +55,24 @@ const sendEmail = async () => {
     // Clicando em nova mensagem
     await page.waitForSelector('#id__6');
     await page.click('#id__6');
+    //Destinatário
+    await page.waitForSelector('.ms-BasePicker-input');
+    await page.type('.ms-BasePicker-input', message.recipient);
+
+    //Assunto
+    await page.waitForSelector('[aria-label="Adicionar um assunto"]');
+    await page.type('[aria-label="Adicionar um assunto"]', message.subject);
+
+    // Corpo do email
+    await page.keyboard.press('Tab');
+    await page.keyboard.type(message.body);
+
+    // Aguardando o botão de enviar email
+    await page.waitForSelector('[aria-label="Enviar"]')
+    await page.click('[aria-label="Enviar"]')
+
+    await browser.close()
+
 
 }
 
