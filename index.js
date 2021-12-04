@@ -2,6 +2,12 @@ const puppeteer = require('puppeteer');
 const email = 'yanak.sushi@outlook.com';
 const senha = 'Zeppelin006'
 
+const message = {
+    recipient: 'yanak.sushi@outlook.com',
+    subject: 'Email automático',
+    body: 'Teste'
+}
+
 const sendEmail = async () => {
     // configurar navegador
     const browser = await puppeteer.launch({
@@ -40,11 +46,16 @@ const sendEmail = async () => {
 
     //"Continuar conectado" Marcando checkbox "Não mostrar isso novamente"
     await page.waitForSelector('input[id="KmsiCheckboxField');
-    await page.click('input[id="KmsiCheckboxField"]')
+    await page.click('input[id="KmsiCheckboxField"]');
 
     // Clicando no botão "Sim"
-    await page.click('input[id="KmsiCheckboxField"]')
-    await page.click('input[type="submit"]')
+    await page.waitForSelector('input[id="KmsiCheckboxField"]');
+    await page.click('input[type="submit"]');
+
+    // Clicando em nova mensagem
+    await page.waitForSelector('#id__6');
+    await page.click('#id__6');
+
 }
 
 sendEmail()
