@@ -56,6 +56,14 @@ const sendEmail = async () => {
     await page.waitForSelector('#id__6');
     await page.click('#id__6');
 
+    //Destinatário
+    await page.waitForSelector('.ms-BasePicker-input')
+    await page.type('.ms-BasePicker-input', message.recipient)
+
+    //Assunto
+    await page.waitForSelector('[aria-label="Adicionar um assunto"]')
+    await page.type('[aria-label="Adicionar um assunto"]', message.subject)
+
 }
 
 sendEmail()
