@@ -1,14 +1,13 @@
 const puppeteer = require('puppeteer');
-const email = 'yanak.sushi@outlook.com';
-const senha = 'Zeppelin006'
+const url = 'https://sngpc.triersistemas.com.br/sngpc/Login.pod';
+const cnpj = '05240070000564'
+const user = 'Sngpc'
+const password = '14114'
+const urlForm = 'https://sngpc.triersistemas.com.br/sngpc/Cad_0005.pod?cacheId=1695720909118'
 
-const message = {
-    recipient: 'yanak.sushi@outlook.com',
-    subject: 'Email automático',
-    body: 'Teste - Isso é uma mensagem que eu não precisei digitar'
-}
 
-const sendEmail = async () => {
+
+const populateForm = async () => {
     // configurar navegador
     const browser = await puppeteer.launch({
         headless: false,
@@ -22,58 +21,34 @@ const sendEmail = async () => {
     });
     // cria a página e acessa a url
     const page = await browser.newPage();
-    await page.goto('https://outlook.live.com/owa/')
+    await page.goto(url)
 
-    //aguardar até o seletor (botão entrar) apareça na tela
-    await page.waitForSelector('[data-task="signin"]');
-    await page.click('[data-task="signin"]');
+    await page.waitForSelector('input#nom_chave'); 
+    await page.type('input#nom_chave', cnpj);
+    
 
-    //Digita o email quando o seletor estiver disponível
-    await page.waitForSelector('input[type="email"]');
-    await page.type('input[type="email"]', email);
+    // Aguarde o campo de usuário usando o seletor XPath e insira o usuário
+    await page.waitForSelector('input#nom_usuario');
+    await page.type('input#nom_usuario', user);
 
-    //Envia o email para efetuar o login
-    await page.click('input[type="submit"]');
+    // Aguarde o campo de senha usando o seletor e insira a senha
+    await page.waitForSelector('input#nom_senha');
+    await page.type('input#nom_senha', password);
 
-    //aguardando o seletor (input passwd) apareça na tela
-    await page.waitForSelector('input[name="passwd"]');
+    await page.waitForSelector('input#salvar');
+    await page.click('input#salvar');
 
-    //Digitando a senha
-    await page.type('input[name="passwd"]', senha);
+ // Aguardar a página de destino (Menu)
+    await page.waitForNavigation();
 
-    //Enviando a senha
-    await page.click('input[type="submit"]');
+    // Navegar diretamente para o formulário desejado
+    await page.goto(urlForm);
 
-    //"Continuar conectado" Marcando checkbox "Não mostrar isso novamente"
-    await page.waitForSelector('input[id="KmsiCheckboxField');
-    await page.click('input[id="KmsiCheckboxField"]');
-
-    // Clicando no botão "Sim"
-    await page.waitForSelector('input[id="KmsiCheckboxField"]');
-    await page.click('input[type="submit"]');
-
-    // Clicando em nova mensagem
-    await page.waitForSelector('#id__6');
-    await page.click('#id__6');
-    //Destinatário
-    await page.waitForSelector('.ms-BasePicker-input');
-    await page.type('.ms-BasePicker-input', message.recipient);
-
-    //Assunto
-    await page.waitForSelector('[aria-label="Adicionar um assunto"]');
-    await page.type('[aria-label="Adicionar um assunto"]', message.subject);
-
-    // Corpo do email
-    await page.keyboard.press('Tab');
-    await page.keyboard.type(message.body);
-
-    // Aguardando o botão de enviar email
-    await page.waitForSelector('[aria-label="Enviar"]')
-    await page.click('[aria-label="Enviar"]')
-
-    await browser.close()
+    // Aguardar até que a página do formulário seja carregada
+    await page.waitForSelector('#seu-elemento-do-formulario');
 
 
+    // await browser.close()
 }
 
-sendEmail()
+populateForm()
